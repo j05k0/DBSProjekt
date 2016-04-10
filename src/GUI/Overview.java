@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import Model.Branch;
 import Model.Employee;
@@ -47,7 +48,6 @@ public class Overview extends AbstractWindow implements ActionListener {
 	private JButton filter;
 	private JTextField senderName;
 	private JTextField senderSurname;
-	private JTextField sendDate;
 
 	public Overview() {
 		setTitle("Zobrazenie tabulky");
@@ -125,10 +125,6 @@ public class Overview extends AbstractWindow implements ActionListener {
 		lblPriezviskoOdosielatea.setBounds(374, 439, 150, 20);
 		getContentPane().add(lblPriezviskoOdosielatea);
 		
-		JLabel lblZsielkaPodanDa = new JLabel("Z\u00E1sielka podan\u00E1 d\u0148a");
-		lblZsielkaPodanDa.setBounds(374, 470, 150, 20);
-		getContentPane().add(lblZsielkaPodanDa);
-		
 		senderName = new JTextField();
 		senderName.setBounds(534, 408, 182, 20);
 		getContentPane().add(senderName);
@@ -138,11 +134,6 @@ public class Overview extends AbstractWindow implements ActionListener {
 		senderSurname.setColumns(10);
 		senderSurname.setBounds(534, 439, 182, 20);
 		getContentPane().add(senderSurname);
-		
-		sendDate = new JTextField();
-		sendDate.setColumns(10);
-		sendDate.setBounds(534, 470, 182, 20);
-		getContentPane().add(sendDate);
 		
 		filter.addActionListener(new ActionListener() {
 			
@@ -154,6 +145,16 @@ public class Overview extends AbstractWindow implements ActionListener {
 				array.add(em.getId());
 				array.add(state.getSelectedIndex());
 				table.setModel(sql.SelectPackages(array));
+				
+				if(!senderName.getText().equals("") && !senderSurname.getText().equals("")){
+					table.setModel(model.buildFilterTable(table.getModel(), senderName.getText() + " " + senderSurname.getText()));
+				}
+				else if(senderName.getText().equals("") && senderSurname.getText().equals("")){
+					
+				}
+				else{
+					InfoWindow("Pre filtrovanie podæa odosielateæa musÌ byù zadanÈ meno aj priezvisko.");
+				}
 			}
 		});
 		

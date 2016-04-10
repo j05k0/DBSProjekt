@@ -429,43 +429,47 @@ public class SQLQueries {
 					if (employeeId != 0) {
 						str.append(" AND z.zamestnanec_id = ?");
 						if (stateId != 0) {
-							str.append(" AND z.stav_zasielky_id = ?");
+							str.append(" AND z.stav_zasielky_id = ? ORDER BY z.id ASC");
 							preps = conn.prepareStatement(str.toString());
 							preps.setInt(1, branchId);
 							preps.setInt(2, employeeId);
 							preps.setInt(3, stateId);
 						} else {
+							str.append(" ORDER BY z.id ASC");
 							preps = conn.prepareStatement(str.toString());
 							preps.setInt(1, branchId);
 							preps.setInt(2, employeeId);
 						}
 					} else if (stateId != 0) {
-						str.append(" AND z.stav_zasielky_id = ?");
+						str.append(" AND z.stav_zasielky_id = ? ORDER BY z.id ASC");
 						preps = conn.prepareStatement(str.toString());
 						preps.setInt(1, branchId);
 						preps.setInt(2, stateId);
 					} else {
+						str.append(" ORDER BY z.id ASC");
 						preps = conn.prepareStatement(str.toString());
 						preps.setInt(1, branchId);
 					}
 				} else if (employeeId != 0) {
 					str.append("z.zamestnanec_id = ?");
 					if (stateId != 0) {
-						str.append(" AND z.stav_zasielky_id = ?");
+						str.append(" AND z.stav_zasielky_id = ? ORDER BY z.id ASC");
 						preps = conn.prepareStatement(str.toString());
 						preps.setInt(1, employeeId);
 						preps.setInt(2, stateId);
 					} else {
+						str.append(" ORDER BY z.id ASC");
 						preps = conn.prepareStatement(str.toString());
 						preps.setInt(1, employeeId);
 					}
 				} else if (stateId != 0) {
-					str.append("z.stav_zasielky_id = ?");
+					str.append("z.stav_zasielky_id = ? ORDER BY z.id ASC");
 					preps = conn.prepareStatement(str.toString());
 					preps.setInt(1, stateId);
 				}
 
 			} else {
+				str.append(" ORDER BY z.id ASC");
 				preps = conn.prepareStatement(str.toString());
 			}
 
