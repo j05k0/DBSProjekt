@@ -22,6 +22,7 @@ public class SQLQueries {
 	private ArrayList<Object> array;
 	private DefaultTableModel defaultTable;
 	private Model m;
+	private ElasticSearch elastic;
 
 	// select podrobnych detailov zasielky
 	public ArrayList<Object> SelectPackageDetails(int packageId) {
@@ -752,6 +753,7 @@ public class SQLQueries {
 				preps.setInt(1, serviceId);
 				preps.executeUpdate();
 
+				/*
 				sql = "DELETE FROM zakaznik WHERE id = ?";
 				preps = conn.prepareStatement(sql);
 				preps.setInt(1, senderId);
@@ -761,6 +763,7 @@ public class SQLQueries {
 				preps = conn.prepareStatement(sql);
 				preps.setInt(1, receiverId);
 				preps.executeUpdate();
+				*/
 			}
 
 			conn.commit();
@@ -797,6 +800,7 @@ public class SQLQueries {
 		int CustomerId1 = 0;
 		int CustomerId2 = 0;
 		int ServiceId = 0;
+		elastic = new ElasticSearch();
 		
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -807,29 +811,46 @@ public class SQLQueries {
 
 			String sql = "INSERT INTO zakaznik (id, meno, priezvisko, ulica_cislo, mesto, PSC) "
 					+ "VALUES (DEFAULT,?,?,?,?,?) returning id";
+			
 			preps = conn.prepareStatement(sql);
-
 			preps.setString(1, (String) array.get(0));
 			preps.setString(2, (String) array.get(1));
 			preps.setString(3, (String) array.get(2));
 			preps.setString(4, (String) array.get(3));
 			preps.setString(5, (String) array.get(4));
-			if (preps.execute()) {
-				ResultSet result = preps.getResultSet();
-				while (result.next()) {
-					CustomerId1 = result.getInt("id");
-				}
+			CustomerId1 = elastic.FindCustomer(array, 0);
+			if(CustomerId1 != 0){
+				System.out.println("Existuje zakaznik");
 			}
+			else{
+				System.out.println("Neexistuje zakaznik");
+				if (preps.execute()) {
+					ResultSet result = preps.getResultSet();
+					while (result.next()) {
+						CustomerId1 = result.getInt("id");
+					}
+				}
+				elastic.InsertCustomer(array, CustomerId1, 0);
+			}
+			
 			preps.setString(1, (String) array.get(5));
 			preps.setString(2, (String) array.get(6));
 			preps.setString(3, (String) array.get(7));
 			preps.setString(4, (String) array.get(8));
 			preps.setString(5, (String) array.get(9));
-			if (preps.execute()) {
-				ResultSet result = preps.getResultSet();
-				while (result.next()) {
-					CustomerId2 = result.getInt("id");
+			CustomerId2 = elastic.FindCustomer(array, 5);
+			if(CustomerId2 != 0){
+				System.out.println("Existuje zakaznik");
+			}
+			else{
+				System.out.println("Neexistuje zakaznik");
+				if (preps.execute()) {
+					ResultSet result = preps.getResultSet();
+					while (result.next()) {
+						CustomerId2 = result.getInt("id");
+					}
 				}
+				elastic.InsertCustomer(array, CustomerId2, 5);
 			}
 
 			sql = "INSERT INTO sluzba (id, druh_id, trieda_id, poistenie, potvrdenie_o_doruceni) "
@@ -869,6 +890,7 @@ public class SQLQueries {
 					System.err.println(ex.getMessage());
 					System.err.println("Zmeny vykonane transakciou boli vratene spat");
 					conn.rollback();
+					//dorobit vymazanie ked nastane rollback
 				} catch (SQLException excep) {
 				}
 			}

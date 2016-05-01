@@ -81,6 +81,7 @@ public class NewPackage extends AbstractWindow implements ActionListener {
 	private JLabel lblTrieda;
 	private JCheckBox insurance;
 	private JCheckBox confirmation;
+	private ItemListener itemLis;
 
 	public NewPackage() {
 		setTitle("Nov\u00E1 z\u00E1sielka");
@@ -322,6 +323,20 @@ public class NewPackage extends AbstractWindow implements ActionListener {
 		JLabel lblPotvrdenieODoruen = new JLabel("Potvrdenie o doru\u010Den\u00ED");
 		lblPotvrdenieODoruen.setBounds(393, 151, 147, 20);
 		getContentPane().add(lblPotvrdenieODoruen);
+		
+		itemLis = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				employee.removeAllItems();
+				ArrayList<Object> emp = sql.SetEmployee(branch.getSelectedItem().toString());
+				Iterator<Object> iter = emp.iterator();
+				while (iter.hasNext()) {
+					employee.addItem((Employee) iter.next());
+				}
+			}
+		};
+		
 	}
 
 	@Override
@@ -340,6 +355,11 @@ public class NewPackage extends AbstractWindow implements ActionListener {
 		receiverPostCode.setText("");
 		confirmation.setSelected(false);
 		insurance.setSelected(false);
+		service.removeAllItems();
+		employee.removeAllItems();
+		postClass.removeAllItems();
+		branch.removeItemListener(itemLis);
+		branch.removeAllItems();
 		
 		array = sql.SelectBranches();
 		iter = array.iterator();
@@ -353,18 +373,7 @@ public class NewPackage extends AbstractWindow implements ActionListener {
 			employee.addItem((Employee) iter.next());
 		}
 		
-		branch.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				employee.removeAllItems();
-				ArrayList<Object> emp = sql.SetEmployee(branch.getSelectedItem().toString());
-				Iterator<Object> iter = emp.iterator();
-				while (iter.hasNext()) {
-					employee.addItem((Employee) iter.next());
-				}
-			}
-		});
+		branch.addItemListener(itemLis);
 		
 		array = sql.SelectServices();
 		iter = array.iterator();

@@ -2,8 +2,15 @@ package GUI;
 
 import javax.swing.JFrame;
 
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+
 import Model.Strings;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
 
 public class main {
@@ -28,6 +35,8 @@ public class main {
 				se.printStackTrace();
 			}
 		}
-		System.out.println("Goodbye!");*/
+		System.out.println("Goodbye!");
+		*/
+		
 	}
 }

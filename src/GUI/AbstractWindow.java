@@ -13,6 +13,7 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import Model.ElasticSearch;
 import Model.Model;
 import Model.SQLQueries;
 import Model.Strings;
@@ -27,6 +28,7 @@ public abstract class AbstractWindow extends JFrame {
 	protected ArrayList<Object> array;
 	protected Iterator<Object> iter;
 	protected static Model model = new Model();
+	protected static ElasticSearch elastic = new ElasticSearch();
 	
 	class Close implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

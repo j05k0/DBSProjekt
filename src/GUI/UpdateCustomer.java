@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 import javax.swing.JTextField;
 
+import Model.ElasticSearch;
 import Model.SQLQueries;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+@SuppressWarnings("serial")
 public class UpdateCustomer extends AbstractWindow implements ActionListener {
 	private JTextField name;
 	private JTextField surname;
@@ -21,6 +23,7 @@ public class UpdateCustomer extends AbstractWindow implements ActionListener {
 	private JTextField postCode;
 	private JButton confirm;
 	private SQLQueries s;
+	private ElasticSearch es;
 	private ArrayList<Object> array;
 	private int choice;
 	
@@ -94,9 +97,11 @@ public class UpdateCustomer extends AbstractWindow implements ActionListener {
 				array.add(postCode.getText());
 				if(choice == 1){
 					s.UpdateCustomer(array, Detail.getSenderId());
+					es.UpdateCustomer(array, Detail.getSenderId());
 				}
 				if(choice == 2){
 					s.UpdateCustomer(array, Detail.getReceiverId());
+					es.UpdateCustomer(array, Detail.getReceiverId());
 				}
 				InfoWindow("Údaje boli úspešne aktualizované");
 				setVisible(false);
@@ -112,6 +117,7 @@ public class UpdateCustomer extends AbstractWindow implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		s = new SQLQueries();
+		es = new ElasticSearch();
 		if(choice == 1){
 			array = s.SelectCustomerDetails(Detail.getSenderId());
 		}
